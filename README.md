@@ -1,2 +1,0 @@
-# Mouse-Killer
-Projet IoT
