@@ -199,3 +199,7 @@ En générant les données, nous obtenons le graphique suivant:
 ![Grafana](images/ana.png)
 
 Cela permet de vérifier la bonne communication des données entre la carte Wyres-base, l'antenne Lora, Node-Red et Grafana.
+
+## Conclusion
+
+Ce projet met en pratique les principes fondamentaux de l'IoT, en permettant une compréhension approfondie des technologies radio LPWAN, des performances de liaison (antenne à antenne), et des modulations utilisées. Il illustre une application end-to-end, de la collecte de données à leur visualisation, tout en sensibilisant aux enjeux du prototypage rapide et du développement de endpoints IoT. En combinant théorie et pratique, ce projet constitue une étape clé pour maîtriser l'écosystème IoT et ses nombreuses applications.
