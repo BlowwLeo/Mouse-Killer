@@ -1,3 +1,7 @@
+Pour executer le code:
+S'assurer de mettre `main.c` dans un repertoire contenant `boards` et `modules`, puis:
+`$ make -j 4 flash`
+
 # Projet IoT | Tapette à souris connectée
 
 ## Description du projet
