@@ -5,16 +5,17 @@ S'assurer de mettre `main.c` dans un repertoire contenant `boards` et `modules`,
 # Projet IoT | Tapette à souris connectée
 
 ## Description du projet
-Ce projet vise à développer une tapette à souris connectée utilisant une carte STM32L151CC et la communication LoRa pour surveiller et rapporter les activités des souris. Les données collectées sont transmises via Node-RED et affichées sur Grafana pour une analyse visuelle.
+Ce projet vise à développer une tapette à souris connectée utilisant une carte STM32L151CC et la communication LoRa pour surveiller et rapporter les activités des souris et du piège. Les données collectées sont transmises via Node-RED et affichées sur Grafana pour une analyse visuelle.
 
 ## Domaine d'utilisation
-Ce projet peut être utilisé dans les environnements domestiques, les entrepôts, ou tout autre espace où la présence de souris doit être surveillée à distance pour des raisons de santé et de sécurité. Ce projet permet également de connaitre l'état du piège sans avoir à vérifier visuellement le piège.
+Ce projet peut être utilisé dans les environnements domestiques, les entrepôts, ou tout autre espace où la présence de souris doit être surveillée et éliminée à distance pour des raisons de santé et de sécurité. Ce projet permet également de connaitre l'état du piège sans avoir à vérifier visuellement le piège.
 
 ## Concurrence du marché
 La tapette à souris connectée se distingue par sa capacité à fournir des données en temps réel sur l'activité des souris, une fonctionnalité absente des tapettes à souris traditionnelles. Peu de dispositifs sur le marché offrent une intégration aussi transparente avec des plateformes comme Node-RED et Grafana.
 
 ## Équipements
 - STM32L151CC microcontrôleur avec module de communication LoRa
+- Carte de développement Arduino Mega 2560
 - Capteur de distance ultrasonique version HC-SR04
 - Bouton poussoir
 - Plateforme Node-RED pour le traitement des données
@@ -26,12 +27,12 @@ Sur la figure suivante, nous pouvons voir le montage réalisé:
 
 ![Montage du système](images/montage.jpg)
 
-Sur la partie gauche de l'image, nous avons la STM32 reliée par ST-Link à la carte Wyres-base. Il ya également une liaison UART pour pouvoir afficher des formations sur le terminal et permettre le débogage. La carte Wyres-base est également connectée (Work in Progress) à la carte arduino. La carte arduino gère les données recues par le capteur ultra-son  et le bouton poussoir.
-Le bouton poussoir permet de détecter lorsque le piège est armé. Le bouton est situé sous la partie mobile de la tapette à souris (voir figure suivante) lorsque cette dernière est armée. Le piège à ultra-son détecte s'il y a eu du mouvement à proximité. Pour cela, nous effectuons plusieurs mesures à intervalle de temps régulier et réalisons une moyenne glissante sur ces données. Pour détecter du mouvement, il faut obtenir une variation de distance suffisament grande (valeur arbitraire).
+Sur la partie gauche de l'image, nous avons la STM32 reliée par ST-Link à la carte Wyres-base. Il ya également une liaison UART sur la carte Wyres permettant d'afficher des informations sur le terminal et ainsi le débogage. La carte Wyres-base est également connectée (Work in Progress) à la carte Arduino Mega 2560. La carte arduino gère les données de distance (detections d'activité des rongeurs autours du piège, état du piège) recues par le capteur ultra-son et le bouton poussoir.
+Le bouton poussoir permet de détecter lorsque le piège est armé. Le bouton est situé sous la partie mobile de la tapette à souris (voir figure suivante) lorsque cette dernière est armée. Le piège à ultra-son détecte s'il y a eu du mouvement à proximité. Pour cela, nous effectuons plusieurs mesures à intervalle de temps régulier et réalisons une moyenne glissante sur ces données. Pour détecter du mouvement, il faut obtenir une variation de distance suffisament grande (dépassement du seuil par rapport à la moyenne sur une mesure).
 
 Une fois les données traitées, la carte arduino va envoyée deux flag à la carte Wyres-base:
 - Un flag responsable de l'état du piège (armé ou non),
-- Un flag à 1 si du mouvement a été détecté.
+- Un flag à 1 si du mouvement a été détecté. 
 
 ![Piège à souris](images/piege.jpg)
 
@@ -47,13 +48,13 @@ Exemple de payload : `o=001 ,v=001 ,p=050`
 Le logiciel envoie les données en lora toute les minutes (duty cycle restriction). Au lancement du logiciel, les données peuvent ne pas être transmises, du fait du duty cycle restriction, après quelques cycles, les données sont envoyées toutes les minutes.
 
 En ce qui concerne les mesures des données, un capteur est un bouton poussoir, passant ou bloquant, les erreurs de mesures sont donc inexistantes.
-Pour le second capteur, nous effectuons une moyenne glissante pour détecter du mouvement. Si cette moyenne varie fortement (valeurs de mesures du catpeur ultra-son fortement décroissantes), le flag associé à la detection de mouvement, va être bloqué à 1 pendant une minute, pour être sûr que la présence de mouvement est prise en compte par la carte Wyres-base.
+Pour le second capteur, nous effectuons une moyenne glissante pour détecter du mouvement. Si une mesure varie fortement par rapport à la moyenne actuelle, le flag associé à la detection de mouvement va être bloqué à 1 pendant une minute, pour être sûr que la présence de mouvement est prise en compte par la carte Wyres-base.
 
 ## Fiche ACV - Tapette à souris connectée
 
 ### Fabrication et Approvisionnement des Composants
-- **STM32L151CC** : Fabrication impliquant des processus complexes et une chaîne d'approvisionnement mondiale.
-- **Carte Wyres-base et Arduino** : Nécessitent des matériaux tels que le cuivre, le plastique et les semi-conducteurs.
+- **microcontrôleurs STM32L151CC et ATMega2560** : Fabrication impliquant des processus complexes et une chaîne d'approvisionnement mondiale.
+- **Cartes Wyres-base et Arduino** : Nécessitent des matériaux tels que le cuivre, le plastique et les semi-conducteurs.
 - **Capteur Ultrason HC-SR04** : Composé de circuits imprimés, de transducteurs et de boîtiers en plastique.
 - **Bouton Poussoir** : Fabriqué principalement en plastique et en métal.
 - **Modules LoRa** : Impliquent des composants électroniques et des antennes.
